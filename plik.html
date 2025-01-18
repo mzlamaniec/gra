@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swipe Word Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f8ff;
+            overflow: hidden;
+        }
+        #word-container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            user-select: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        #word {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #007BFF;
+            text-transform: uppercase;
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+        }
+        #instructions {
+            margin-top: 10px;
+            font-size: 1rem;
+            color: #555;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="word-container">
+        <div id="word">Start</div>
+    </div>
+    <button id="next-word-button">Dalej</button>
+
+    <script>
+        const words = [
+            "kot", "pies", "dom", "auto", "las", "słońce", "księżyc", "chleb", "mleko", "ryba",
+            "ptak", "drzewo", "kwiat", "miś", "lalka", "piłka", "rower", "zegar", "krzesło", "stół",
+            "okno", "drzwi", "książka", "jabłko", "banan", "gruszka", "trawa", "morze", "góra", "rzeka",
+            "zamek", "most", "samolot", "pociąg", "statek", "telefon", "komputer", "lampa", "telewizor", "buty",
+            "czapka", "kurtka", "plecak", "szkoła", "nauczyciel", "uczeń", "zabawka", "cukierek", "ciasto", "lody",
+            "rower", "krowa", "koń", "mysz", "sowa", "żaba", "kura", "kaczka", "świnia", "koza",
+            "traktor", "ogród", "pole", "miasto", "wieś", "jezioro", "plaża", "piasek", "kamień", "woda"
+        ];
+
+        const wordElement = document.getElementById("word");
+        const nextWordButton = document.getElementById("next-word-button");
+        let currentIndex = -1;
+        let previousIndex = -1;
+
+        function showNextWord() {
+            do {
+                currentIndex = Math.floor(Math.random() * words.length);
+            } while (currentIndex === previousIndex);
+            previousIndex = currentIndex;
+
+            wordElement.style.opacity = 0;
+            wordElement.style.transform = "scale(0.8)";
+            setTimeout(() => {
+                wordElement.textContent = words[currentIndex];
+                wordElement.style.opacity = 1;
+                wordElement.style.transform = "scale(1)";
+            }, 500);
+        }
+
+        // Add swipe functionality
+        let startX = 0;
+
+        document.addEventListener("touchstart", (e) => {
+            startX = e.touches[0].clientX;
+        });
+
+        document.addEventListener("touchend", (e) => {
+            const endX = e.changedTouches[0].clientX;
+            if (endX - startX > 50) {
+                showNextWord();
+            }
+        });
+
+        // Add button click functionality
+        nextWordButton.addEventListener("click", showNextWord);
+
+        // Add click functionality to the word container
+        document.getElementById("word-container").addEventListener("click", showNextWord);
+    </script>
+</body>
+</html>
